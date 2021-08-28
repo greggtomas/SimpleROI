@@ -15,6 +15,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var otherFeesTextField: UITextField!
     @IBOutlet weak var resultsDisplay: UILabel!
     
+    @IBOutlet weak var calculateBtn: UIButton!
+    @IBOutlet weak var clearBtn: UIButton!
+    
     @IBOutlet weak var invGainsAmt: UILabel!
     @IBOutlet weak var roi: UILabel!
     @IBOutlet weak var annualRoi: UILabel!
@@ -27,6 +30,7 @@ class ViewController: UIViewController {
         roi.isHidden = true
         annualRoi.isHidden = true
         invLength.isHidden = true
+        setButtonCharacteristics()
     }
 
     @IBAction func calculateButtonPressed(_ sender: UIButton) {
@@ -34,14 +38,40 @@ class ViewController: UIViewController {
         getResults()
     }
     
-    private func getResults(){
-        let soldPrice = Int(soldPriceTextField.text!) ?? 0
-        let shippingFee = Int(shippingFeeTextField.text!) ?? 0
-        let labelFee = Int(labelFeeTextField.text!) ?? 0
-        let otherFee = Int(otherFeesTextField.text!) ?? 0
+    @IBAction func clearButtonPressed(_ sender: Any) {
+        soldPriceTextField.text = ""
+        shippingFeeTextField.text = ""
+        labelFeeTextField.text = ""
+        otherFeesTextField.text = ""
+    }
+    
+    private func setButtonCharacteristics(){
         
-        let roi = soldPrice - shippingFee - labelFee - otherFee
-        resultsDisplay.text = "\(roi)"
+        calculateBtn.layer.cornerRadius = 5
+        calculateBtn.backgroundColor = .systemBlue
+        clearBtn.layer.cornerRadius = 5
+        clearBtn.backgroundColor = .systemBlue
+    }
+    
+    private func getResults(){
+        let soldPrice = Double(soldPriceTextField.text!) ?? 0
+        let shippingFee = Double(shippingFeeTextField.text!) ?? 0
+        let labelFee = Double(labelFeeTextField.text!) ?? 0
+        let otherFee = Double(otherFeesTextField.text!) ?? 0
+        
+        let roiAmt = round((soldPrice - shippingFee - labelFee - otherFee) * 100)/100.0
+
+        if (roiAmt > 0 ){
+            invGainsAmt.textColor = UIColor(red: 0, green: 0.5765, blue: 0.1412, alpha: 1.0)
+        }else{
+            invGainsAmt.textColor = UIColor.red
+        }
+        
+        invGainsAmt.isHidden = false
+        invGainsAmt.lineBreakMode = .byClipping // removes the elipse
+        
+        invGainsAmt.text = "$\(roiAmt)"
+        
     }
     
 }
