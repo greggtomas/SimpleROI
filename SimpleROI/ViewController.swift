@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var annualRoi: UILabel!
     @IBOutlet weak var invLength: UILabel!
     
+    @IBOutlet weak var background: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -30,6 +31,7 @@ class ViewController: UIViewController {
         roi.isHidden = true
         annualRoi.isHidden = true
         invLength.isHidden = true
+        view.sendSubviewToBack(background)
         setButtonCharacteristics()
     }
 
@@ -46,7 +48,6 @@ class ViewController: UIViewController {
     }
     
     private func setButtonCharacteristics(){
-        
         calculateBtn.layer.cornerRadius = 5
         calculateBtn.backgroundColor = .systemBlue
         clearBtn.layer.cornerRadius = 5
