@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var amtInvestedTextField: UITextField!
     @IBOutlet weak var soldPriceTextField: UITextField!
     @IBOutlet weak var shippingFeeTextField: UITextField!
     @IBOutlet weak var labelFeeTextField: UITextField!
@@ -55,13 +56,17 @@ class ViewController: UIViewController {
     }
     
     private func getResults(){
+        let amtInvested = Double(amtInvestedTextField.text!) ?? 0
         let soldPrice = Double(soldPriceTextField.text!) ?? 0
         let shippingFee = Double(shippingFeeTextField.text!) ?? 0
         let labelFee = Double(labelFeeTextField.text!) ?? 0
         let otherFee = Double(otherFeesTextField.text!) ?? 0
         
-        let roiAmt = round((soldPrice - shippingFee - labelFee - otherFee) * 100)/100.0
+        let investmentGain = round((soldPrice - shippingFee - labelFee - otherFee) - amtInvested)
+        let returnAmt = round((soldPrice - shippingFee - labelFee - otherFee) * 100)/100.0
 
+        let roiAmt =  ((returnAmt - amtInvested)/amtInvested) * 100
+        
         if (roiAmt > 0 ){
             invGainsAmt.textColor = UIColor(red: 0, green: 0.5765, blue: 0.1412, alpha: 1.0)
         }else{
@@ -71,7 +76,11 @@ class ViewController: UIViewController {
         invGainsAmt.isHidden = false
         invGainsAmt.lineBreakMode = .byClipping // removes the elipse
         
-        invGainsAmt.text = "$\(roiAmt)"
+        invGainsAmt.text = "$\(investmentGain)"
+        
+        roi.isHidden = false
+        roi.lineBreakMode = .byClipping
+        roi.text = "\(roiAmt)%"
         
     }
     
