@@ -11,6 +11,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var amtInvestedTextField: UITextField!
     @IBOutlet weak var soldPriceTextField: UITextField!
+    @IBOutlet weak var sellingFeePercentTextField: UITextField!
     @IBOutlet weak var shippingFeeTextField: UITextField!
     @IBOutlet weak var labelFeeTextField: UITextField!
     @IBOutlet weak var otherFeesTextField: UITextField!
@@ -37,7 +38,6 @@ class ViewController: UIViewController {
     }
 
     @IBAction func calculateButtonPressed(_ sender: UIButton) {
-        
         getResults()
     }
     
@@ -58,16 +58,20 @@ class ViewController: UIViewController {
     private func getResults(){
         let amtInvested = Double(amtInvestedTextField.text!) ?? 0
         let soldPrice = Double(soldPriceTextField.text!) ?? 0
+        let sellingFees = Double(sellingFeePercentTextField.text!) ?? 0
         let shippingFee = Double(shippingFeeTextField.text!) ?? 0
         let labelFee = Double(labelFeeTextField.text!) ?? 0
         let otherFee = Double(otherFeesTextField.text!) ?? 0
         
-        let investmentGain = round((soldPrice - shippingFee - labelFee - otherFee) - amtInvested)
-        let returnAmt = round((soldPrice - shippingFee - labelFee - otherFee) * 100)/100.0
+        let totalSellingFee = soldPrice * (sellingFees/100)
+        let netGain = soldPrice - totalSellingFee
+        let minusFees = (soldPrice - totalSellingFee - shippingFee - labelFee - otherFee) - amtInvested
+        let investmentGain = round(100.0 * minusFees)/100.0
 
-        let roiAmt =  ((returnAmt - amtInvested)/amtInvested) * 100
+        let roiAmt = ((netGain - amtInvested)/amtInvested) * 100
+        print(roiAmt)
         
-        if (roiAmt > 0 ){
+        if (investmentGain > 0 ){
             invGainsAmt.textColor = UIColor(red: 0, green: 0.5765, blue: 0.1412, alpha: 1.0)
         }else{
             invGainsAmt.textColor = UIColor.red
@@ -75,12 +79,12 @@ class ViewController: UIViewController {
         
         invGainsAmt.isHidden = false
         invGainsAmt.lineBreakMode = .byClipping // removes the elipse
-        
         invGainsAmt.text = "$\(investmentGain)"
         
         roi.isHidden = false
         roi.lineBreakMode = .byClipping
-        roi.text = "\(roiAmt)%"
+        let roundedRoi = round(100.0 * roiAmt) / 100
+        roi.text = "\(roundedRoi)%"
         
     }
     
